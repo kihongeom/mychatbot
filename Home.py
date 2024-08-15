@@ -1,16 +1,9 @@
 import streamlit as st
 import os
 
-# ###
-# from dotenv import load_dotenv
-# load_dotenv()
-# from langchain_teddynote import logging
-# # 프로젝트 이름 변경은 .env에서 
-# ###
-
 # config는 상단에
 st.set_page_config(
-    page_title="엄기홍을 위한 챗봇입니다",
+    page_title="나만을 위한 챗봇입니다",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",
