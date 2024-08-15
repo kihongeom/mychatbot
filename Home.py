@@ -3,7 +3,7 @@ import os
 
 # config는 상단에
 st.set_page_config(
-    page_title="나만을 위한 챗봇입니다",
+    page_title="나만을 위한 챗봇입니다.",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",
