@@ -1,6 +1,6 @@
 import streamlit as st
 from langchain_core.messages import ChatMessage
-from 사용하지_도구.agent1 import create_agent
+from agent import create_agent
 import os
 
 st.subheader("Tavily 검색 챗봇")
@@ -15,6 +15,8 @@ st.markdown(
 
 """
 )
+
+
 
 # 대화 기록이 없다면, chat_history 라는 키로 빈 대화를 저장하는 list 를 생성
 if "chat_history" not in st.session_state:
