@@ -32,74 +32,6 @@ st.subheader("환영합니다")
 # api_confirm_btn = False
 # search_confirm_btn = False
 
-# # API 키 처리
-# if "OPENAI_API_KEY" in os.environ:
-#     st.write("OpenAI API 키가 설정되었습니다.")
-# else:
-#     st.error("OpenAI API 키가 설정되지 않았습니다.")
-#     # OpenAI API 키 입력
-#     api_key = st.text_input("OPENAI API 키 입력(ChatGPT): [발급 방법](https://wikidocs.net/233342)", type="password")
-#     api_confirm_btn = st.button("설정하기", key="api_key")
-    
-# if "Tavily_API_KEY" in os.environ:
-#     st.write("Tavily API 키가 설정되었습니다.")
-# else:
-#     st.error("Tavily API 키가 설정되지 않았습니다.")
-#     # Tavily API 키 입력
-#     search_api_key = st.text_input("Tavily Search API 키 입력(검색용): [발급 방법](https://wikidocs.net/234282)", type="password")
-#     search_confirm_btn = st.button("설정하기", key="search_api_key") 
-
-# # 설정 확인 버튼
-# if api_confirm_btn:
-#     if api_key:
-#         os.environ["OPENAI_API_KEY"] = api_key
-#         st.write(f"OPENAI API 키가 설정되었습니다: `{api_key[:15]}************`")
-
-# if search_confirm_btn:
-#     if search_api_key:
-#         os.environ["TAVILY_API_KEY"] = search_api_key
-#         st.write(
-#             f"TAVILPY API 키가 설정되었습니다: `{search_api_key[:15]}************`"
-#         )
-
-# # 설정 완료 여부 확인 및 안내 메시지 출력
-# if api_confirm_btn or search_confirm_btn:
-#     if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
-#         st.warning("OPENAI API 키를 설정해 주세요.")
-#     if not search_confirm_btn and "Tavily_API_KEY" not in os.environ:
-#         st.warning("Tavily Search API 키를 설정해 주세요.")
-
-# # 세션 상태 초기화
-# if "api_key" not in st.session_state:
-#     st.session_state.api_key = ""
-# if "search_api_key" not in st.session_state:
-#     st.session_state.search_api_key = ""
-
-# # OpenAI API 키 처리
-# if st.session_state.api_key or "OPENAI_API_KEY" in os.environ:
-#     st.write("OpenAI API 키가 설정되었습니다.")
-# else:
-#     st.error("OpenAI API 키가 설정되지 않았습니다.")
-#     st.session_state.api_key = st.text_input("OPENAI API 키 입력(ChatGPT): [발급 방법](https://wikidocs.net/233342)", type="password")
-#     if st.button("설정하기", key="api_key_button"):
-#         os.environ["OPENAI_API_KEY"] = st.session_state.api_key
-#         st.write(f"OPENAI API 키가 설정되었습니다: `{st.session_state.api_key[:15]}************`")
-
-# # Tavily API 키 처리
-# if st.session_state.search_api_key or "Tavily_API_KEY" in os.environ:
-#     st.write("Tavily API 키가 설정되었습니다.")
-# else:
-#     st.error("Tavily API 키가 설정되지 않았습니다.")
-#     st.session_state.search_api_key = st.text_input("Tavily Search API 키 입력(선택): [발급 방법](https://wikidocs.net/234282)", type="password")
-#     if st.button("설정하기", key="search_api_key_button"):
-#         os.environ["TAVILY_API_KEY"] = st.session_state.search_api_key
-#         st.write(
-#             f"TAVILY API 키가 설정되었습니다: `{st.session_state.search_api_key[:15]}************`"
-#         )
-
-# 버튼 변수를 기본값으로 초기화
-api_confirm_btn = False
-search_confirm_btn = False
 
 # API 키 처리
 if "OPENAI_API_KEY" in os.environ:
@@ -133,9 +65,9 @@ if search_confirm_btn:
             f"TAVILPY API 키가 설정되었습니다: `{search_api_key[:15]}************`"
         )
 
-# 설정 완료 여부 확인 및 안내 메시지 출력
-if api_confirm_btn or search_confirm_btn:
-    if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
-        st.warning("OPENAI API 키를 설정해 주세요.")
-    if not search_confirm_btn and "Tavily_API_KEY" not in os.environ:
-        st.warning("Tavily Search API 키를 설정해 주세요.")
+# # 설정 완료 여부 확인 및 안내 메시지 출력
+# if api_confirm_btn or search_confirm_btn:
+#     if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
+#         st.warning("OPENAI API 키를 설정해 주세요.")
+#     if not search_confirm_btn and "Tavily_API_KEY" not in os.environ:
+#         st.warning("Tavily Search API 키를 설정해 주세요.")
