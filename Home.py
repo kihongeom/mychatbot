@@ -65,9 +65,9 @@ if search_confirm_btn:
             f"TAVILPY API 키가 설정되었습니다: `{search_api_key[:15]}************`"
         )
 
-# # 설정 완료 여부 확인 및 안내 메시지 출력
-# if api_confirm_btn or search_confirm_btn:
-#     if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
-#         st.warning("OPENAI API 키를 설정해 주세요.")
-#     if not search_confirm_btn and "Tavily_API_KEY" not in os.environ:
-#         st.warning("Tavily Search API 키를 설정해 주세요.")
+# 설정 완료 여부 확인 및 안내 메시지 출력
+if api_confirm_btn or search_confirm_btn:
+    if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
+        st.warning("OPENAI API 키를 설정해 주세요.")
+    if not search_confirm_btn and "Tavily_API_KEY" not in os.environ:
+        st.warning("Tavily Search API 키를 설정해 주세요.")
