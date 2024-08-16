@@ -28,9 +28,9 @@ with st.sidebar:
 
 st.subheader("환영합니다")
 
-# # 버튼 변수를 기본값으로 초기화
-# api_confirm_btn = False
-# search_confirm_btn = False
+# 버튼 변수를 기본값으로 초기화
+api_confirm_btn = False
+search_confirm_btn = False
 
 
 # API 키 처리
