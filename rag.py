@@ -6,7 +6,9 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.document_loaders import WebBaseLoader
-from langchain.retrievers import BM25Retriever, EnsembleRetriever
+# from langchain.retrievers import BM25Retriever, EnsembleRetriever
+from langchain.retrievers.ensemble import EnsembleRetriever
+from langchain.retrievers.bm25 import BM25Retriever
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain import hub
 import bs4
@@ -162,7 +164,8 @@ def create_rag_chain(retriever, model_name="gpt-4o-mini"):
 
 
 def create_stuff_summary_chain():
-    prompt = hub.pull("teddynote/summary-stuff-documents-korean")
+    # prompt = hub.pull("teddynote/summary-stuff-documents-korean")
+    prompt = load_prompt("prompts/news_summary.yaml", encoding='utf-8')
 
     llm = ChatOpenAI(
         model_name="gpt-4o-mini",
