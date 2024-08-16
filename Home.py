@@ -1,16 +1,23 @@
 import streamlit as st
 import os
 
+# ###
+# from dotenv import load_dotenv
+# load_dotenv()
+# from langchain_teddynote import logging
+# # 프로젝트 이름 변경은 .env에서 
+# ###
+
 # config는 상단에
 st.set_page_config(
-    page_title="나만을 위한 챗봇입니다.",
+    page_title="나만을 위한 챗봇입니다",
     page_icon="🧊",
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
         'Get Help': 'https://kihong.knu.ac.kr/',
         'Report a bug': "https://kihong.knu.ac.kr/",
-        'About': "경북대학교 엄기홍 교수 연구실입니다(https://kihong.knu.ac.kr/)"
+        'About': "경북대학교 엄기홍 교수가 작성했습니다(https://kihong.knu.ac.kr/)"
     }
 )
 
@@ -25,6 +32,7 @@ st.subheader("환영합니다")
 api_confirm_btn = False
 search_confirm_btn = False
 
+# API 키 처리
 if "OPENAI_API_KEY" in os.environ:
     st.write("OpenAI API 키가 설정되었습니다.")
 else:
