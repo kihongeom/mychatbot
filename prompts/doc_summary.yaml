@@ -1,7 +1,6 @@
 _type: "prompt"
 template: |
   Analyze the attached document and produce a detailed summary.
-  Include an overview of the main arguments, evidence presented, and the author's conclusions.
   Additionally, provide your own analysis of the strengths and weaknesses of the document's content.
   답변에 출처를 반드시 포함해줘.
   출처 전후에 괄호를 포함해주세요.
