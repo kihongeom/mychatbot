@@ -131,7 +131,7 @@ def naver_news_crawling(url):
 def create_rag_chain(retriever, model_name="gpt-4o-mini"):
     # 단계 6: 프롬프트 생성(Create Prompt)
     # 프롬프트를 생성합니다.
-    prompt = load_prompt("prompts/summary.yaml", encoding='utf-8')
+    prompt = load_prompt("prompts/doc_summary.yaml", encoding='utf-8')
     # prompt = PromptTemplate.from_template(
     #     """   Analyze the attached document and produce a detailed summary.
     #     Include an overview of the main arguments, evidence presented, and the author's conclusions.
