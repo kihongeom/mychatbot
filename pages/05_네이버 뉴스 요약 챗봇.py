@@ -4,7 +4,7 @@ from rag import naver_news_crawling, create_stuff_summary_chain
 import os 
 from datetime import datetime
 
-st.title("네이버 뉴스 요약")
+st.subheader("네이버 뉴스 요약")
 
 if "OPENAI_API_KEY" in os.environ:
     st.write("OpenAI API 키가 설정되었습니다.")
