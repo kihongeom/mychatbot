@@ -133,21 +133,7 @@ def naver_news_crawling(url):
 def create_rag_chain(retriever, model_name="gpt-4o-mini"):
     # 단계 6: 프롬프트 생성(Create Prompt)
     # 프롬프트를 생성합니다.
-    prompt = load_prompt("prompts/doc_summary.yaml", encoding='utf-8')
-    # prompt = PromptTemplate.from_template(
-    #     """   Analyze the attached document and produce a detailed summary.
-    #     Include an overview of the main arguments, evidence presented, and the author's conclusions.
-    #     Additionally, provide your own analysis of the strengths and weaknesses of the document's content.
-    #     답변에 출처를 반드시 포함해줘.
-    #     출처 전후에 괄호를 포함해주세요.
-
-    # #Context: 
-    # {context} 
-
-    # #Question: 
-    # {question}
-
-    # )
+    prompt = hub.pull("kihongeom/doc_summary")
 
     # 단계 7: 언어모델(LLM) 생성
     # 모델(LLM) 을 생성합니다.
@@ -164,8 +150,7 @@ def create_rag_chain(retriever, model_name="gpt-4o-mini"):
 
 
 def create_stuff_summary_chain():
-    # prompt = hub.pull("teddynote/summary-stuff-documents-korean")
-    prompt = load_prompt("prompts/news_summary.yaml", encoding='utf-8')
+    prompt = hub.pull("kihongeom/news_summary")
 
     llm = ChatOpenAI(
         model_name="gpt-4o-mini",
