@@ -32,9 +32,9 @@ if not os.path.exists(".cache/files"):
 if not os.path.exists(".cache/embeddings"):
     os.mkdir(".cache/embeddings")
 
-# 대화 기록이 없다면, chat_history 라는 키로 빈 대화를 저장하는 list 를 생성
-if "chat_history" not in st.session_state:
-    st.session_state["chat_history"] = []
+# 대화 기록이 없다면, doc_history 라는 키로 빈 대화를 저장하는 list 를 생성
+if "doc_history" not in st.session_state:
+    st.session_state["doc_history"] = []
 
 # chain 을 초기화
 if "rag_chain" not in st.session_state:
@@ -43,12 +43,12 @@ if "rag_chain" not in st.session_state:
 
 # 대화 기록에 채팅을 추가
 def add_history(role, message):
-    st.session_state["chat_history"].append(ChatMessage(role=role, content=message))
+    st.session_state["doc_history"].append(ChatMessage(role=role, content=message))
 
 
 # 이전 까지의 대화를 출력
 def print_history():
-    for chat_message in st.session_state["chat_history"]:
+    for chat_message in st.session_state["doc_history"]:
         # 메시지 출력(role: 누가 말한 메시지 인가?) .write(content: 메시지 내용)
         st.chat_message(chat_message.role).write(chat_message.content)
 
