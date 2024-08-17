@@ -7,7 +7,7 @@ from datetime import datetime
 st.subheader("문서 기반 챗봇")
 
 if "OPENAI_API_KEY" in os.environ:
-    st.write("OpenAI API 키가 설정되었습니다.")
+    st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
 else:
     st.error("OpenAI API 키가 설정되지 않았습니다.")
 
