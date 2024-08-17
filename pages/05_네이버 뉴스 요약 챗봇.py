@@ -4,7 +4,7 @@ from rag import naver_news_crawling, create_stuff_summary_chain
 import os 
 from datetime import datetime
 
-st.subheader("네이버 뉴스 요약")
+st.title("네이버 뉴스 요약")
 
 if "OPENAI_API_KEY" in os.environ:
     st.write("OpenAI API 키가 설정되었습니다.")
@@ -46,9 +46,6 @@ with st.sidebar:
 
     # 설정이 완료 되었는지 확인하는 버튼
     confirm_btn = st.button("요약 시작")
-    # 요약 기록을 지우는 버튼
-    clear_history_btn = st.button("요약 지우기")
-
 
 # 파일을 캐시 저장(시간이 오래 걸리는 작업을 처리할 예정)
 @st.cache_resource(show_spinner="URL을 분석 중입니다...")
@@ -75,8 +72,3 @@ if confirm_btn:
     add_history(f"##### 다음은 {naver_news_url} 의 요약본입니다.")
     # 히스토리에 추가
     add_history(final_summary)
-
-# 요약 기록을 지우는 버튼이 눌렸을 때
-if clear_history_btn:
-    st.session_state["summary_history"] = []
-    st.success("요약이 모두 지워졌습니다.")
