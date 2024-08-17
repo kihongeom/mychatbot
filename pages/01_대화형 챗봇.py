@@ -55,20 +55,8 @@ def get_session_history(session_ids):
 
 
 with st.sidebar:
-    session_id = st.text_input("Conversation Session ID", "New Chat? Input New ID")
-    st.markdown(
-    """
+    session_id = st.text_input("Conversation Session ID", "Session ID 입력하세요")
 
-
-"""
-)
-    clearn_btn = st.button("채팅 초기화")
-
-if clearn_btn:
-    # 채팅 초기화
-    st.session_state["session_id"] = create_timestamp()
-    st.session_state['chat_history'] = []
-    st.rerun()
 
 def create_chain(model_name="gpt-4o-mini"):
     # 프롬프트 정의
