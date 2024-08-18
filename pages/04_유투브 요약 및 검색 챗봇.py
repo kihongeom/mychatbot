@@ -1,6 +1,6 @@
-import os
-from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles
 import streamlit as st
+from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles
+import os
 
 st.subheader("유투브 요약 및 검색 챗봇")
 
