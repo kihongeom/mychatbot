@@ -20,8 +20,10 @@ if "youtube_history" not in st.session_state or st.session_state["youtube_histor
     st.session_state["youtube_history"] = []
 
 # chain 을 초기화
-if "youtube_history" not in st.session_state:
-    st.session_state["youtube_history"] = None
+# if "youtube_history" not in st.session_state:
+#     st.session_state["youtube_history"] = None
+if "youtube_history" not in st.session_state or st.session_state["youtube_history"] is None:
+    st.session_state["youtube_history"] = []
 
 # 대화 기록에 채팅을 추가
 def add_history(role, message):
