@@ -1,4 +1,5 @@
 import streamlit as st
+import rag
 from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles
 import os
 
