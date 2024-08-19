@@ -207,11 +207,6 @@ def create_rag_quiz_chain(retriever, model_name="gpt-4o"):
     )
     return chain
 
-# def convert_to_seconds(timestamp):
-#     """타임스탬프를 초 단위로 변환"""
-#     hours, minutes, seconds = map(float, timestamp.split(':'))
-#     return hours * 3600 + minutes * 60 + seconds
-
 def download_auto_subtitles(youtube_url, language='ko'):
     def convert_to_seconds(timestamp):
         """타임스탬프를 초 단위로 변환"""
@@ -281,6 +276,7 @@ def download_auto_subtitles(youtube_url, language='ko'):
     
     # JSON 파일의 상대 경로 반환
     return json_output_filename.replace("\\", "/")
+
 
 
 def rag_setup_vtt(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
