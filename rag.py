@@ -213,7 +213,7 @@ class Logger(object):
     def warning(self, msg):
         pass
     def error(self, msg):
-        pass
+        print(f"ERROR:{msg}")
 
 def download_auto_subtitles(youtube_url, language='ko'):
     # 다운로드된 자막 파일의 기본 이름 설정
@@ -236,13 +236,14 @@ def download_auto_subtitles(youtube_url, language='ko'):
 
     # yt-dlp를 사용해 YouTube 정보를 추출하고 자막을 다운로드
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(youtube_url)
-        # 다운로드된 자막 파일 이름 생성
-        generated_filename = f"{info_dict['title']}.{language}.vtt"
-        # except yt_dlp.utils.DownloadError as e:
-        #     st.error(f"Download error: {str(e)}")
-        #     return None  # Handle the error appropriately
-    
+        
+        try:
+            info_dict = ydl.extract_info(youtube_url)
+            # 다운로드된 자막 파일 이름 생성
+            generated_filename = f"{info_dict['title']}.{language}.vtt"
+        except yt_dlp.utils.DownloadError as e:
+            print(f"Download error: {str(e)}")
+        
     # 현재 디렉토리에서 자막 파일을 찾음
     found_file = None
     for file in os.listdir():
