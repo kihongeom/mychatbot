@@ -206,7 +206,15 @@ def create_rag_quiz_chain(retriever, model_name="gpt-4o"):
     )
     return chain
 
-
+class QuietLogger:
+    def debug(self, msg):
+        pass
+    
+    def warning(self, msg):
+        pass
+    
+    def error(self, msg):
+        pass
 
 def download_auto_subtitles(youtube_url, language='ko'):
     # 다운로드된 자막 파일의 기본 이름 설정
@@ -217,8 +225,11 @@ def download_auto_subtitles(youtube_url, language='ko'):
         'writesubtitles': True,  # 자막을 다운로드
         'subtitleslangs': [language],  # 자막 언어 설정
         'subtitlesformat': 'vtt',  # 자막 파일 형식을 .vtt로 지정
-        'quiet': True,
-        'no_warnings': True,
+        'quiet': True, # Suppress output
+        'no_warnings': True, # Suppress warnings
+        'restrictfilenames': True,  # Avoid potential filename issues
+        'writesubtitles': True,  # Attempt to download subtitles
+        'logger': QuietLogger(),  # Use the custom logger,
         'skip_download': True,  # 비디오 파일은 다운로드하지 않음
         'outtmpl': '%(title)s.%(ext)s',  # 저장할 파일명 형식 지정
         'writeautomaticsub': True  # 자동 생성된 자막 다운로드
