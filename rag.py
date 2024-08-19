@@ -239,8 +239,7 @@ def download_auto_subtitles(youtube_url, language='ko'):
         
         try:
             info_dict = ydl.extract_info(youtube_url)
-            # 다운로드된 자막 파일 이름 생성
-            generated_filename = f"{info_dict['title']}.{language}.vtt"
+
         except yt_dlp.utils.DownloadError as e:
             print(f"Download error: {str(e)}")
         
