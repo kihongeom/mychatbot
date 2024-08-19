@@ -151,6 +151,7 @@ unstructured==0.15.0
 unstructured-client==0.24.1
 urllib3==2.2.2
 wcwidth==0.2.13
+webvtt-py==0.5.1
 wget==3.2
 wheel==0.43.0
 wrapt==1.16.0
