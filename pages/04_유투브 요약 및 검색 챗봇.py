@@ -1,5 +1,5 @@
 import streamlit as st
-from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles, convert_to_seconds, rag_setup_json
+from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles, rag_setup_json
 import os
 
 st.subheader("유투브 요약 및 검색 챗봇")
