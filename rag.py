@@ -19,6 +19,7 @@ from langchain.schema import Document
 import os
 import shutil
 import yt_dlp
+import streamlit as st
 
 def rag_setup(file_path, chunk_size=1000, chunk_overlap=50):
     # 단계 1: 문서 로드(Load Documents)
@@ -206,13 +207,11 @@ def create_rag_quiz_chain(retriever, model_name="gpt-4o"):
     )
     return chain
 
-class QuietLogger:
+class Logger(object):
     def debug(self, msg):
         pass
-    
     def warning(self, msg):
         pass
-    
     def error(self, msg):
         pass
 
@@ -229,7 +228,7 @@ def download_auto_subtitles(youtube_url, language='ko'):
         'no_warnings': True, # Suppress warnings
         'restrictfilenames': True,  # Avoid potential filename issues
         'writesubtitles': True,  # Attempt to download subtitles
-        'logger': QuietLogger(),  # Use the custom logger,
+        'logger':  Logger(),  # Use the custom logger,
         'skip_download': True,  # 비디오 파일은 다운로드하지 않음
         'outtmpl': '%(title)s.%(ext)s',  # 저장할 파일명 형식 지정
         'writeautomaticsub': True  # 자동 생성된 자막 다운로드
@@ -240,6 +239,9 @@ def download_auto_subtitles(youtube_url, language='ko'):
         info_dict = ydl.extract_info(youtube_url)
         # 다운로드된 자막 파일 이름 생성
         generated_filename = f"{info_dict['title']}.{language}.vtt"
+        # except yt_dlp.utils.DownloadError as e:
+        #     st.error(f"Download error: {str(e)}")
+        #     return None  # Handle the error appropriately
     
     # 현재 디렉토리에서 자막 파일을 찾음
     found_file = None
