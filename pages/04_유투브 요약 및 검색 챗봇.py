@@ -46,7 +46,7 @@ with st.sidebar:
     confirm_btn = st.button("자막처리 시작")
 
 # 자막 파일을 처리하는 함수
-@st.cache_resource(show_spinner="자막 파일을 처리 중입니다...")
+# @st.cache_resource(show_spinner="자막 파일을 처리 중입니다...")
 def process_subtitle_file(url):
     file_path = download_auto_subtitles(url)
     # 다운로드된 파일을 사용하여 retriever를 설정
