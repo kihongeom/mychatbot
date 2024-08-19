@@ -207,12 +207,17 @@ def create_rag_quiz_chain(retriever, model_name="gpt-4o"):
     )
     return chain
 
-def convert_to_seconds(timestamp):
-    """타임스탬프를 초 단위로 변환"""
-    hours, minutes, seconds = map(float, timestamp.split(':'))
-    return hours * 3600 + minutes * 60 + seconds
+# def convert_to_seconds(timestamp):
+#     """타임스탬프를 초 단위로 변환"""
+#     hours, minutes, seconds = map(float, timestamp.split(':'))
+#     return hours * 3600 + minutes * 60 + seconds
 
 def download_auto_subtitles(youtube_url, language='ko'):
+    def convert_to_seconds(timestamp):
+        """타임스탬프를 초 단위로 변환"""
+        hours, minutes, seconds = map(float, timestamp.split(':'))
+        return hours * 3600 + minutes * 60 + seconds
+    
     # 다운로드된 자막 파일의 기본 이름 설정
     output_filename = 'subtitle.ko.vtt'
 
