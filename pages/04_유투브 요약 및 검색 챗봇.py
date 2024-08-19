@@ -1,6 +1,5 @@
 import streamlit as st
-import rag
-from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles
+from rag import create_youtube_chain, rag_setup_vtt, download_auto_subtitles, convert_to_seconds, rag_setup_json
 import os
 
 st.subheader("유투브 요약 및 검색 챗봇")
@@ -21,8 +20,6 @@ if "youtube_history" not in st.session_state or st.session_state["youtube_histor
     st.session_state["youtube_history"] = []
 
 # chain 을 초기화
-# if "youtube_history" not in st.session_state:
-#     st.session_state["youtube_history"] = None
 if "youtube_history" not in st.session_state or st.session_state["youtube_history"] is None:
     st.session_state["youtube_history"] = []
 
@@ -51,7 +48,7 @@ with st.sidebar:
 def process_subtitle_file(url):
     file_path = download_auto_subtitles(url)
     # 다운로드된 파일을 사용하여 retriever를 설정
-    retriever = rag_setup_vtt(file_path, chunk_size=300, chunk_overlap=50)
+    retriever = rag_setup_json(file_path, chunk_size=300, chunk_overlap=50)
     return retriever
 
 # 파일이 업로드 되었을 때
