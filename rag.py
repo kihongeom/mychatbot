@@ -20,6 +20,7 @@ import os
 import shutil
 import yt_dlp
 import streamlit as st
+import logging
 
 def rag_setup(file_path, chunk_size=1000, chunk_overlap=50):
     # 단계 1: 문서 로드(Load Documents)
@@ -219,6 +220,15 @@ def download_auto_subtitles(youtube_url, language='ko'):
     # 다운로드된 자막 파일의 기본 이름 설정
     output_filename = 'subtitle.ko.vtt'
 
+    # 로그 파일 설정
+    logging.basicConfig(
+        filename='yt_dlp_log.txt',
+        filemode='w',
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        level=logging.INFO
+    )
+    logger = logging.getLogger(__name__)
+
     # yt-dlp 옵션 설정
     ydl_opts = {
         'writesubtitles': True,  # 자막을 다운로드
@@ -233,6 +243,7 @@ def download_auto_subtitles(youtube_url, language='ko'):
         'outtmpl': '%(title)s.%(ext)s',  # 저장할 파일명 형식 지정
         'writeautomaticsub': True,  # 자동 생성된 자막 다운로드
         'nocache': True,  # yt-dlp 캐시 사용 안함
+        'logger': logger,  # Redirect output to logger
     }
 
     # yt-dlp를 사용해 YouTube 정보를 추출하고 자막을 다운로드
