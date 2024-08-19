@@ -299,7 +299,7 @@ def create_youtube_chain(retriever, model_name="gpt-4o-mini"):
 
     # 단계 7: 언어모델(LLM) 생성
     # 모델(LLM) 을 생성합니다.
-    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    llm = ChatOpenAI(model_name=model_name, temperature=0.0)
 
     # 단계 8: 체인(Chain) 생성
     chain = (
