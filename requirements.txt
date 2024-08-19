@@ -45,6 +45,7 @@ jedi==0.19.1
 Jinja2==3.1.4
 joblib==1.4.2
 JPype1==1.5.0
+json==2.0.9
 jsonpatch==1.33
 jsonpath-python==1.0.6
 jsonpointer==3.0.0
