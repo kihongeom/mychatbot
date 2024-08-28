@@ -6,8 +6,9 @@ from datetime import datetime
 
 st.subheader("문서 기반 챗봇")
 
-if "OPENAI_API_KEY" in os.environ:
+if "OPENAI_API_KEY" in st.session_state:
     st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
+    # st.write("현재 세션에서 사용 중인 API 키:", st.session_state["OPENAI_API_KEY"])  # Debugging line
 else:
     st.error("OpenAI API 키가 설정되지 않았습니다.")
 
@@ -71,8 +72,16 @@ def embed_file(file):
 
 # 파일이 업로드 되었을 때
 if uploaded_file:
-    retriever = embed_file(uploaded_file)
-    st.session_state["rag_chain"] = create_rag_chain(retriever)
+        # Check the file size
+    if uploaded_file.size > 200 * 1024 * 1024:  # 200MB limit
+        st.write("파일이 너무 큽니다. 200MB 이하의 파일만 업로드할 수 있습니다.")
+    else:
+        try: 
+            # st.write("File uploaded successfully!")  # Add this line for debugging
+            retriever = embed_file(uploaded_file)
+            st.session_state["rag_chain"] = create_rag_chain(retriever)
+        except Exception as e:
+            st.write("An error occurred while processing the file:", e)
 
 # 이전 까지의 대화를 출력
 print_history()

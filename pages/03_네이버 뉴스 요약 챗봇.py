@@ -5,8 +5,9 @@ from datetime import datetime
 
 st.subheader("네이버 뉴스 요약")
 
-if "OPENAI_API_KEY" in os.environ:
+if "OPENAI_API_KEY" in st.session_state:
     st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
+    # st.write("현재 세션에서 사용 중인 API 키:", st.session_state["OPENAI_API_KEY"])  # Debugging line
 else:
     st.error("OpenAI API 키가 설정되지 않았습니다.")
 

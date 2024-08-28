@@ -11,8 +11,9 @@ import os
 
 st.subheader("나만의 챗봇")
 
-if "OPENAI_API_KEY" in os.environ:
+if "OPENAI_API_KEY" in st.session_state:
     st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
+    # st.write("현재 세션에서 사용 중인 API 키:", st.session_state["OPENAI_API_KEY"])  # Debugging line
 else:
     st.error("OpenAI API 키가 설정되지 않았습니다.")
 
@@ -56,7 +57,7 @@ with st.sidebar:
     session_id = st.text_input("Conversation Session ID", "Session ID 입력하세요")
 
 
-def create_chain(model_name="gpt-4o-mini"):
+def create_chain(model_name='gpt-4o-mini', openai_api_key=None):
     # 프롬프트 정의
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -67,8 +68,16 @@ def create_chain(model_name="gpt-4o-mini"):
         ]
     )
 
-    # llm 생성
-    llm = ChatOpenAI(model_name="gpt-4o-mini")
+    # Use the provided API key or fall back to the session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        else:
+            st.error("OpenAI API 키가 설정되지 않았습니다.")
+            return None
+
+    # llm 생성 with API key from session state
+    llm = ChatOpenAI(model_name=model_name, openai_api_key=openai_api_key)
 
     # 일반 Chain 생성
     chain = prompt | llm | StrOutputParser()
@@ -98,6 +107,9 @@ if question:
 
     # AI가 답변을 생성하기 위한 Chain 을 생성
     chain = create_chain('gpt-4o-mini')
+    if chain is None:
+        st.error("체인을 생성할 수 없습니다. API 키를 확인해 주세요.")
+        st.stop()
 
     answer = chain.stream(
         # 질문 입력
