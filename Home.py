@@ -1,12 +1,4 @@
 import streamlit as st
-import os
-
-# ###
-# from dotenv import load_dotenv
-# load_dotenv()
-# from langchain_teddynote import logging
-# # 프로젝트 이름 변경은 .env에서 
-# ###
 
 # config는 상단에
 st.set_page_config(
@@ -28,27 +20,17 @@ with st.sidebar:
 
 st.subheader("환영합니다")
 
-# 버튼 변수를 기본값으로 초기화
-api_confirm_btn = False
-# search_confirm_btn = False
-
-# API 키 처리
-if "OPENAI_API_KEY" in os.environ:
-    st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
-else:
-    st.error("OpenAI API 키가 설정되지 않았습니다.")
-    # OpenAI API 키 입력
+# Check and Set API Key
+if "OPENAI_API_KEY" not in st.session_state:
     api_key = st.text_input("OPENAI API 키 입력(ChatGPT): [발급 방법](https://wikidocs.net/233342)", type="password")
-    st.session_state['OPENAI_API_KEY'] = api_key
-    api_confirm_btn = st.button("설정하기", key="api_key")
-    
-# 설정 확인 버튼
-if api_confirm_btn:
-    if api_key:
-        os.environ["OPENAI_API_KEY"] = api_key
-        st.write(f"OPENAI API 키가 설정되었습니다: `{api_key[:15]}************`")
+    if st.button("설정하기", key="api_key"):
+        if api_key:
+            st.session_state["OPENAI_API_KEY"] = api_key
+            st.success("OPENAI API 키가 설정되었습니다.")
+            # st.write("API 키 설정 완료:", st.session_state["OPENAI_API_KEY"])  # Debugging line
+        else:
+            st.error("유효한 API 키를 입력해 주세요.")
+else:
+    st.markdown("<small> OpenAI API 키가 설정되었습니다.</small>", unsafe_allow_html=True)
+    # st.write("현재 세션에서 사용 중인 API 키:", st.session_state["OPENAI_API_KEY"])  # Debugging line
 
-# 설정 완료 여부 확인 및 안내 메시지 출력
-if api_confirm_btn:
-    if not api_confirm_btn and "OPENAI_API_KEY" not in os.environ:
-        st.warning("OPENAI API 키를 설정해 주세요.")

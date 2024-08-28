@@ -46,7 +46,7 @@ def rag_setup(file_path, chunk_size=1000, chunk_overlap=50):
     return retriever
 
 
-def rag_setup2(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
+def rag_setup2(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5, openai_api_key=None):
     # 단계 1: 문서 로드(Load Documents)
     loader = PyMuPDFLoader(file_path)
     docs = loader.load()
@@ -58,7 +58,16 @@ def rag_setup2(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
     split_documents = text_splitter.split_documents(docs)
 
     # 단계 3: 임베딩(Embedding) 생성
-    embeddings = OpenAIEmbeddings()
+    # Use the provided API key or fall back to the environment or session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        # elif "OPENAI_API_KEY" in os.environ:
+        #     openai_api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            raise ValueError("OpenAI API 키가 설정되지 않았습니다.")
+
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 
     # 단계 4: DB 생성(Create DB) 및 저장
     # 벡터스토어를 생성합니다.
@@ -137,14 +146,24 @@ def naver_news_crawling(url):
     return docs
 
 
-def create_rag_chain(retriever, model_name="gpt-4o-mini"):
+def create_rag_chain(retriever, model_name="gpt-4o-mini", openai_api_key=None):
     # 단계 6: 프롬프트 생성(Create Prompt)
     # 프롬프트를 생성합니다.
     prompt = hub.pull("kihongeom/doc_summary")
 
+    # Use the provided API key or fall back to the environment or session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        # elif "OPENAI_API_KEY" in os.environ:
+        #     openai_api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            raise ValueError("OpenAI API 키가 설정되지 않았습니다.")
+
+
     # 단계 7: 언어모델(LLM) 생성
     # 모델(LLM) 을 생성합니다.
-    llm = ChatOpenAI(model_name=model_name, temperature=0)
+    llm = ChatOpenAI(model_name=model_name, openai_api_key=openai_api_key, temperature=0)
 
     # 단계 8: 체인(Chain) 생성
     chain = (
@@ -156,11 +175,21 @@ def create_rag_chain(retriever, model_name="gpt-4o-mini"):
     return chain
 
 
-def create_stuff_summary_chain():
+def create_stuff_summary_chain(openai_api_key=None):
     prompt = hub.pull("kihongeom/news_summary")
+
+    # Use the provided API key or fall back to the environment or session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        # elif "OPENAI_API_KEY" in os.environ:
+        #     openai_api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            raise ValueError("OpenAI API 키가 설정되지 않았습니다.")
 
     llm = ChatOpenAI(
         model_name="gpt-4o-mini",
+        openai_api_key=openai_api_key,
         streaming=True,
     )
 
@@ -208,11 +237,20 @@ def create_rag_quiz_chain(retriever, model_name="gpt-4o"):
     return chain
 
 def download_auto_subtitles(youtube_url, language='ko'):
-    def convert_to_seconds(timestamp):
+    def format_timestamp(timestamp):
         """타임스탬프를 초 단위로 변환"""
-        hours, minutes, seconds = map(float, timestamp.split(':'))
-        return hours * 3600 + minutes * 60 + seconds
-    
+        # Split timestamp by ':'
+        time_parts = timestamp.split(':')
+        
+        # Hours, minutes, and seconds
+        hours = int(time_parts[0]) if len(time_parts) == 3 else 0
+        minutes = int(time_parts[-2])
+        seconds = float(time_parts[-1])
+        
+        # Format the timestamp as hh:mm:ss
+        formatted_timestamp = f"{hours:02}:{minutes:02}:{seconds:06.3f}"
+        return formatted_timestamp
+
     # 다운로드된 자막 파일의 기본 이름 설정
     output_filename = 'subtitle.ko.vtt'
 
@@ -225,7 +263,6 @@ def download_auto_subtitles(youtube_url, language='ko'):
         'quiet': True,  # 출력 억제
         'no_warnings': True,  # 경고 억제
         'restrictfilenames': True,  # 잠재적인 파일 이름 문제 방지
-        'writesubtitles': True,  # 자막 다운로드 시도
         'skip_download': True,  # 비디오 파일은 다운로드하지 않음
         'outtmpl': '%(title)s.%(ext)s',  # 저장할 파일명 형식 지정
         'writeautomaticsub': True,  # 자동 생성된 자막 다운로드
@@ -265,8 +302,8 @@ def download_auto_subtitles(youtube_url, language='ko'):
     # 자막을 초 단위로 변환하여 리스트에 저장
     subtitles = []
     for caption in webvtt.read(final_path):
-        start_time = convert_to_seconds(caption.start)
-        end_time = convert_to_seconds(caption.end)
+        start_time = format_timestamp(caption.start)
+        end_time = format_timestamp(caption.end)
         subtitles.append({'start': start_time, 'end': end_time, 'text': caption.text})
 
     # 변환된 자막을 JSON 형식으로 파일에 저장
@@ -279,47 +316,47 @@ def download_auto_subtitles(youtube_url, language='ko'):
 
 
 
-def rag_setup_vtt(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
-    # 단계 1: 문서 로드(Load Documents)
-    with open(file_path, 'r', encoding='utf-8') as file:
-        vtt_content = file.read()
+# def rag_setup_vtt(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
+#     # 단계 1: 문서 로드(Load Documents)
+#     with open(file_path, 'r', encoding='utf-8') as file:
+#         vtt_content = file.read()
 
-    # 문서 객체로 래핑
-    docs = [Document(page_content=vtt_content)]
+#     # 문서 객체로 래핑
+#     docs = [Document(page_content=vtt_content)]
 
-    # 단계 2: 문서 분할(Split Documents)
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=chunk_size, chunk_overlap=chunk_overlap
-    )
-    split_documents = text_splitter.split_documents(docs)
+#     # 단계 2: 문서 분할(Split Documents)
+#     text_splitter = RecursiveCharacterTextSplitter(
+#         chunk_size=chunk_size, chunk_overlap=chunk_overlap
+#     )
+#     split_documents = text_splitter.split_documents(docs)
 
-    # 단계 3: 임베딩(Embedding) 생성
-    embeddings = OpenAIEmbeddings()
+#     # 단계 3: 임베딩(Embedding) 생성
+#     embeddings = OpenAIEmbeddings()
 
-    # 단계 4: DB 생성(Create DB) 및 저장
-    # 벡터스토어를 생성합니다.
-    vectorstore = FAISS.from_documents(documents=split_documents, embedding=embeddings)
+#     # 단계 4: DB 생성(Create DB) 및 저장
+#     # 벡터스토어를 생성합니다.
+#     vectorstore = FAISS.from_documents(documents=split_documents, embedding=embeddings)
 
-    # 단계 5: 검색기(Retriever) 생성
-    # 문서에 포함되어 있는 정보를 검색하고 생성합니다.
-    dense_retriever = vectorstore.as_retriever(search_kwargs={"k": k})
-    sparse_retriever = BM25Retriever.from_documents(
-        # doc_list_1의 텍스트와 메타데이터를 사용하여 BM25Retriever를 초기화합니다.
-        split_documents,
-    )
-    sparse_retriever.k = k  # BM25Retriever의 검색 결과 개수를 1로 설정합니다.
+#     # 단계 5: 검색기(Retriever) 생성
+#     # 문서에 포함되어 있는 정보를 검색하고 생성합니다.
+#     dense_retriever = vectorstore.as_retriever(search_kwargs={"k": k})
+#     sparse_retriever = BM25Retriever.from_documents(
+#         # doc_list_1의 텍스트와 메타데이터를 사용하여 BM25Retriever를 초기화합니다.
+#         split_documents,
+#     )
+#     sparse_retriever.k = k  # BM25Retriever의 검색 결과 개수를 1로 설정합니다.
 
-    # EnsembleRetriever로 dense_retriever와 sparse_retriever를 결합합니다.
-    ensemble_retriever = EnsembleRetriever(
-        # BM25Retriever와 FAISS retriever를 사용하여 EnsembleRetriever를 초기화하고, 각 retriever의 가중치를 설정합니다.
-        retrievers=[dense_retriever, sparse_retriever],
-        weights=[weight, 1 - weight],
-    )
+#     # EnsembleRetriever로 dense_retriever와 sparse_retriever를 결합합니다.
+#     ensemble_retriever = EnsembleRetriever(
+#         # BM25Retriever와 FAISS retriever를 사용하여 EnsembleRetriever를 초기화하고, 각 retriever의 가중치를 설정합니다.
+#         retrievers=[dense_retriever, sparse_retriever],
+#         weights=[weight, 1 - weight],
+#     )
 
-    # 반환값
-    return ensemble_retriever
+#     # 반환값
+#     return ensemble_retriever
 
-def rag_setup_json(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5):
+def rag_setup_json(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5, openai_api_key=None):
     # 단계 1: JSON 파일에서 자막 로드 및 문서로 변환
     with open(file_path, 'r', encoding='utf-8') as file:
         subtitles = json.load(file)
@@ -337,7 +374,16 @@ def rag_setup_json(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5
     split_documents = text_splitter.split_documents(docs)
 
     # 단계 3: 임베딩(Embedding) 생성
-    embeddings = OpenAIEmbeddings()
+        # Use the provided API key or fall back to the environment or session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        elif "OPENAI_API_KEY" in os.environ:
+            openai_api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            raise ValueError("OpenAI API 키가 설정되지 않았습니다.")
+        
+    embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
 
     # 단계 4: DB 생성(Create DB) 및 저장
     # 벡터스토어를 생성합니다.
@@ -362,14 +408,26 @@ def rag_setup_json(file_path, chunk_size=1000, chunk_overlap=50, k=4, weight=0.5
 
 
 
-def create_youtube_chain(retriever, model_name="gpt-4o-mini"):
+def create_youtube_chain(retriever, model_name="gpt-4o-mini", openai_api_key=None):
     # 단계 6: 프롬프트 생성(Create Prompt)
     # 프롬프트를 생성합니다.
     prompt = hub.pull("kihongeom/youtube_summary")
 
+    # Use the provided API key or fall back to the environment or session state
+    if openai_api_key is None:
+        if "OPENAI_API_KEY" in st.session_state:
+            openai_api_key = st.session_state["OPENAI_API_KEY"]
+        elif "OPENAI_API_KEY" in os.environ:
+            openai_api_key = os.environ["OPENAI_API_KEY"]
+        else:
+            raise ValueError("OpenAI API 키가 설정되지 않았습니다.")
+        
     # 단계 7: 언어모델(LLM) 생성
     # 모델(LLM) 을 생성합니다.
-    llm = ChatOpenAI(model_name=model_name, temperature=0.0)
+    llm = ChatOpenAI(
+        model_name=model_name, 
+        openai_api_key=openai_api_key,
+        temperature=0.0)
 
     # 단계 8: 체인(Chain) 생성
     chain = (
